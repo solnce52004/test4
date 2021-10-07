@@ -1,0 +1,9 @@
+.idea
+target
+logs
+lib
+.DS_Store
+src/.DS_Store
+src/main/.DS_Store
+test4
+spy.log

@@ -1,0 +1,3 @@
+Main-Class: dev.example.App
+Manifest-Version: 1.0
+
