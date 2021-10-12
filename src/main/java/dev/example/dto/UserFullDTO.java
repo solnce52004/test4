@@ -1,8 +1,9 @@
-package dev.example.dao.dto;
+package dev.example.dto;
 
 import lombok.*;
 
 @NoArgsConstructor //!!!
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString

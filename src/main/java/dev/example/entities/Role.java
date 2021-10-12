@@ -1,5 +1,7 @@
 package dev.example.entities;
 
+import dev.example.entities.converters.StatusAttrConverter;
+import dev.example.entities.embeddable.Status;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -13,13 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = { "users"})
-@ToString(exclude = {"users"})
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@EqualsAndHashCode(exclude = {"users"}, callSuper = true)
+@ToString(exclude = {"users"}, callSuper = true)
 
+public class Role extends BaseEntity {
     @Column(name = "title")
     private String title;
 
@@ -30,7 +29,17 @@ public class Role {
     @ManyToMany(
             fetch = FetchType.LAZY,
             mappedBy = "roles"
-            )
+    )
     @Fetch(value = FetchMode.JOIN)
     private List<User> users = new ArrayList<>();
+
+    @Embedded
+    @Convert(converter = StatusAttrConverter.class, attributeName = "is_actual")
+    @AttributeOverrides(
+            @AttributeOverride(
+                    name = "isActualStatus",
+                    column = @Column(name = "is_actual")
+            )
+    )
+    private Status isActual;
 }

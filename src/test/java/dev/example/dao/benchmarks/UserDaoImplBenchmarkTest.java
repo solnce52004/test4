@@ -7,12 +7,8 @@ import dev.example.dao.UserDaoImpl;
 import dev.example.entities.Address;
 import dev.example.entities.Role;
 import dev.example.entities.User;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.Resources;
 import org.openjdk.jmh.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -41,7 +37,7 @@ public class UserDaoImplBenchmarkTest extends AbstractBenchmark {
 
 
     @Setup
-    public void setup(){
+    public void setup() {
         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
         context.register(AppConfig.class);
         context.register(TestConfig.class);
@@ -60,8 +56,8 @@ public class UserDaoImplBenchmarkTest extends AbstractBenchmark {
     }
 
     @TearDown
-    public void tearDown(){
-
+    public void tearDown() {
+        userDao.remove(user);
     }
 
 
@@ -71,7 +67,6 @@ public class UserDaoImplBenchmarkTest extends AbstractBenchmark {
         user.setUsername(state.userName);
         user.setRoles(roles);
         user.setAddresses(address);
-
 
         userDao.create(user);
     }

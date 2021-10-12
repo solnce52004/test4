@@ -1,10 +1,15 @@
 package dev.example.entities;
 
-import lombok.*;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.DynamicUpdate;
+import dev.example.entities.converters.StatusAttrConverter;
+import dev.example.entities.embeddable.Status;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,35 +17,23 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(
-        exclude = {
-                "roles",
-                "addresses"
-        }
-)
-@ToString(
-        exclude = {
-//                "roles",
-//                "addresses"
-        }
-)
-@DynamicUpdate
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
+@EqualsAndHashCode(exclude = {"roles", "addresses"}, callSuper = true)
+@ToString(callSuper = true)
+//@Where(clause = "id=5000")
+//@WhereJoinTable(clause = "")
+//@Subselect("select *, count(u.id) as COUNTUSER5000 from users as u where id=5000")
+//@Synchronize({"User"})
 
+public class User extends BaseEntity {
     @Column(name = "username")
     private String username;
 
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = CascadeType.ALL //не будем удалять роль при удалении юзера
-            )
+    )
     @JoinTable(
             name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id")},
@@ -49,14 +42,36 @@ public class User {
     @Fetch(value = FetchMode.JOIN)
 //    @Fetch(value = FetchMode.SELECT)
 //    @BatchSize(size = 10)
-    private List<dev.example.entities.Role> roles = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
+
 
     @ManyToOne(
             optional = false,
-            cascade = CascadeType.ALL //не будем удалять адрес при удалении юзера
+            cascade = CascadeType.ALL, //не будем удалять адрес при удалении юзера
+            fetch = FetchType.EAGER
     )
     @JoinColumn(name = "address_id")
     @Fetch(value = FetchMode.JOIN)
-//Поведение HQL запросов при режиме загрузке FetchMode.JOIN, на первый взгляд, немного неожиданное. Вместо того, чтобы загрузить связанные коллекции, помеченные аннотацией @Fetch(FetchMode.JOIN), в одном запросе с корневыми сущностями, используя SQL оператор JOIN, HQL запрос транслируется в несколько SQL запросов по типа FetchMode.SELECT. Но в отличии от FetchMode.SELECT, при FetchMode.JOIN будет игнорироваться указанный тип загрузки (LAZY и EAGER) и все коллекции будут загружены сразу, а не при первом обращении в коде (поведение соответствующее типу EAGER).
     private Address addresses;
+    //Поведение HQL запросов при режиме загрузке FetchMode.JOIN, на первый взгляд, немного неожиданное. Вместо того, чтобы загрузить связанные коллекции, помеченные аннотацией @Fetch(FetchMode.JOIN), в одном запросе с корневыми сущностями, используя SQL оператор JOIN, HQL запрос транслируется в несколько SQL запросов по типа FetchMode.SELECT. Но в отличии от FetchMode.SELECT, при FetchMode.JOIN будет игнорироваться указанный тип загрузки (LAZY и EAGER) и все коллекции будут загружены сразу, а не при первом обращении в коде (поведение соответствующее типу EAGER).
+
+    @Embedded
+    @Convert(
+            converter = StatusAttrConverter.class,
+            attributeName = "is_actual"
+    )
+    @AttributeOverrides(
+            @AttributeOverride(
+                    name = "isActualStatus",
+                    column = @Column(name = "is_actual")
+            )
+    )
+    @ColumnDefault("false")
+//    @Generated(GenerationTime.INSERT)
+    private Status isActual;
+
+//    private Integer countUser5000;
+
+    @Formula("substr(username, 1, 3)")
+    private String shortName;
 }

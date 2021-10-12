@@ -1,30 +1,42 @@
 package dev.example.entities;
 
+import dev.example.entities.converters.ZonedDateTimeAttributeConverter;
 import lombok.*;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.ColumnTransformer;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "addresses")
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "users")
-@ToString(exclude = "users")
-@DynamicUpdate
-@DynamicInsert
-public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@EqualsAndHashCode(exclude = "users", callSuper = true)
+@ToString(exclude = "users", callSuper = true)
+
+public class Address extends BaseEntity {
+
+    //@Temporal should only be set on a java.util.Date or java.util.Calendar
+//    @Temporal(TemporalType.TIMESTAMP)
+
+    //Эти генераторы ставят время системное (или -3 UTC - если в url бд есть такой параметр)
+//    @CreationTimestamp //запишется именно значение генератора вместо сеттера
+//    @UpdateTimestamp // только один тип генератора можно использовать для одного поля
+
+    @Convert(
+//            converter = TimestampAttributeConverter.class,
+            converter = ZonedDateTimeAttributeConverter.class,
+            attributeName = "verified_at"
+    )
+    @Column(name = "verified_at")
+//    private Timestamp verifiedAt;
+    private ZonedDateTime verifiedAt;
+
 
     @Column(name = "city")
     private String city;
@@ -33,18 +45,17 @@ public class Address {
     private String street;
 
     @Column(name = "num_building")
+    @ColumnTransformer( //bed practice!
+            read = "num_building / 10",
+            write = "? * 10"
+    )
     private Integer numBuilding;
 
     @OneToMany(
             mappedBy = "addresses",//название поля класса User
             fetch = FetchType.LAZY
     )
-    // !!! Associations marked as mappedBy must not define database mappings like @JoinTable or @JoinColumn
-//    @JoinColumn(
-//            name = "address_id",
-//            referencedColumnName = "id"
-//    )
     @Fetch(value = FetchMode.JOIN)
-    //В случае, когда вы хотите добавить к связи @OneToMany еще одну сущность, выгоднее использовать Bag, т.к. он для этой операции не требует загрузки всех связанных сущностей.
     private List<User> users = new ArrayList<>();
+    //В случае, когда вы хотите добавить к связи @OneToMany еще одну сущность, выгоднее использовать Bag, т.к. он для этой операции не требует загрузки всех связанных сущностей.
 }

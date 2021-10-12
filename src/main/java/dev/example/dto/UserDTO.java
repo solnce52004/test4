@@ -1,4 +1,4 @@
-package dev.example.dao.dto;
+package dev.example.dto;
 
 import dev.example.entities.Address;
 import dev.example.entities.Role;

@@ -1,7 +1,6 @@
 package dev.example.dao.interfaces;
 
-import dev.example.dao.dto.UserDTO;
-import dev.example.dao.dto.UserFullDTO;
+import dev.example.dto.UserFullDTO;
 import dev.example.entities.Role;
 import dev.example.entities.User;
 
@@ -12,7 +11,7 @@ public interface UserDao extends CRUDDAO<User, Long> {
 
     void remove(User user);
 
-    UserDTO findById(Long id);
+    User findById(Long id);
 
     List<User> findAll();
 

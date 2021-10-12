@@ -1,6 +1,5 @@
-
-@org.hibernate.annotations.NamedQueries({
-        @org.hibernate.annotations.NamedQuery(
+@NamedQueries({
+        @NamedQuery(
                 name = "User_findUsersOrderByName",
                 query = "from User as u order by u.username asc",
                 timeout = 1,
@@ -8,8 +7,8 @@
                 comment = "find all users"
         )
 })
-@org.hibernate.annotations.NamedNativeQueries({
-        @org.hibernate.annotations.NamedNativeQuery(
+@NamedNativeQueries({
+        @NamedNativeQuery(
                 name = "User_findUsersByRole_Native",
                 query = "select " +
                         "u.id as id, " +
@@ -21,13 +20,13 @@
                         "join roles r on r.id = ur.role_id " +
                         "where r.title = :role_title"//,
 //                resultSetMapping = "UserDTO"
-//                resultClass = dev.example.dao.dto.UserFullDTO.class
+//                resultClass = dev.example.dto.UserFullDTO.class
         )
 })
 //@javax.persistence.SqlResultSetMapping(
 //        name = "UserDTO",
 //        classes = @javax.persistence.ConstructorResult(
-//                targetClass = dev.example.dao.dto.UserFullDTO.class,
+//                targetClass = dev.example.dto.UserFullDTO.class,
 //                columns = {
 //                        @javax.persistence.ColumnResult(name = "id"),
 //                        @javax.persistence.ColumnResult(name = "username"),
@@ -36,5 +35,20 @@
 //                }
 //        )
 //)
-
+@GenericGenerator(
+        name = "GENERATOR_ENHANCED_SEQUENCE",
+        strategy = "enhanced-sequence",
+        parameters = {
+                @Parameter(
+                        name = "sequence_name",
+                        value = "TEST4_SEQUENCE"
+                ),
+                @Parameter(
+                        name = "initial_value",
+                        value = "5000"
+                )
+        }
+)
 package dev.example.dao;
+
+import org.hibernate.annotations.*;
