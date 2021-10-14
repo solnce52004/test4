@@ -6,6 +6,7 @@ import dev.example.entities.Address;
 import dev.example.entities.Role;
 import dev.example.entities.User;
 import dev.example.entities.embeddable.Status;
+import dev.example.entities.enams.EnumRole;
 import io.sniffy.sql.SqlExpectation;
 import io.sniffy.test.Count;
 import io.sniffy.test.spring.SniffySpringTestListener;
@@ -48,9 +49,9 @@ class UserDaoImplTest {
     @BeforeEach
     void before() {
         Status isActualUser = new Status(true);
-        Status isActualRole = new Status(false);
+        Status isActualRole = new Status(true);
 
-        role.setTitle("quest");
+        role.setTitle(EnumRole.ADMIN);
         role.setLevel(4);
         role.setIsActual(isActualRole);
         roles.add(role);
@@ -62,7 +63,7 @@ class UserDaoImplTest {
 //                Timestamp.from(
                 LocalDateTime.now()
                         .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
-//                        .atZone(ZoneId.of(BaseEntity.CURRENT_TIMEZONE))
+//                        .atZone(ZoneId.of(Constants.CURRENT_TIMEZONE))
 //                        .toInstant()
 //                )
         );
@@ -86,6 +87,18 @@ class UserDaoImplTest {
     }
 
     @Test
+    void createWithAudit() {
+        final Long id = userDao.createWithAudit(user);
+        final User NewUserById = userDao.findById(id);
+
+        System.out.println(NewUserById);
+        System.out.println(id);
+
+        assertThat(id).isPositive();
+        assertThat(NewUserById).isNotNull();
+    }
+
+    @Test
     @SqlExpectation(count = @Count(max = 5))
     void findAll() {
         final List<User> users = userDao.findAll();
@@ -96,7 +109,7 @@ class UserDaoImplTest {
     @Test
     void findAllByRole() {
         final Role role = new Role();
-        role.setTitle("admin");
+        role.setTitle(EnumRole.ADMIN);
         final List<UserFullDTO> users = userDao.findAllByRole(role);
         users.forEach(System.out::println);
         assertThat(users).isNotEmpty();
@@ -105,8 +118,41 @@ class UserDaoImplTest {
     //TODO: Could not resolve PropertyAccess for this on class dev.example.dto.UserDTO
     @Test
     void findById() {
-        final User user = userDao.findById(5018L);
+        final User user = userDao.findById(5120L);
         System.out.println(user);
         assertThat(user).isNotNull();
+    }
+
+    @Test
+    void update(){
+        final Long createdId = userDao.create(user);
+        assertThat(createdId).isNotNull();
+
+        System.out.println(user);
+        final String username = "ttt";
+        user.setUsername(username);
+
+        userDao.update(user);
+        final User userUpdated = userDao.findById(createdId);
+        System.out.println(userUpdated);
+
+        assertThat(userUpdated.getUsername()).isEqualTo(username);
+    }
+
+    @Test
+    void updateById(){
+        final User userById = userDao.findById(5065L);
+        System.out.println(userById);
+
+        final String username = "123456789";
+        userById.setUsername(username);
+
+        userDao.update(userById);
+
+        final User userUpdated = userDao.findById(userById.getId());
+        System.out.println(userUpdated);
+        System.out.println(userUpdated.getUpdatedAt());
+
+        assertThat(userUpdated.getUsername()).isEqualTo(username);
     }
 }

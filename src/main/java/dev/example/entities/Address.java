@@ -22,6 +22,7 @@ import java.util.List;
 public class Address extends BaseEntity {
 
     //@Temporal should only be set on a java.util.Date or java.util.Calendar
+    //Temporal will not be converted
 //    @Temporal(TemporalType.TIMESTAMP)
 
     //Эти генераторы ставят время системное (или -3 UTC - если в url бд есть такой параметр)
@@ -29,12 +30,10 @@ public class Address extends BaseEntity {
 //    @UpdateTimestamp // только один тип генератора можно использовать для одного поля
 
     @Convert(
-//            converter = TimestampAttributeConverter.class,
             converter = ZonedDateTimeAttributeConverter.class,
             attributeName = "verified_at"
     )
     @Column(name = "verified_at")
-//    private Timestamp verifiedAt;
     private ZonedDateTime verifiedAt;
 
 
@@ -54,6 +53,8 @@ public class Address extends BaseEntity {
     @OneToMany(
             mappedBy = "addresses",//название поля класса User
             fetch = FetchType.LAZY
+//            ,
+//            cascade = CascadeType.ALL
     )
     @Fetch(value = FetchMode.JOIN)
     private List<User> users = new ArrayList<>();

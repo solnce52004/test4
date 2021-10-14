@@ -1,6 +1,9 @@
 package dev.conf;
 
+import dev.example.entities.event_listeners.ReplicationEventListenerIntegrator;
+import dev.example.entities.interceptors.AuditLogUserInterceptor;
 import org.hibernate.SessionFactory;
+import org.hibernate.jpa.AvailableSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -24,6 +27,7 @@ public class TestHibernateConfig {
         factoryBean.setPackagesToScan("dev.example.entities");
         factoryBean.setAnnotatedPackages("dev.example.dao");
         factoryBean.setHibernateProperties(hibernateProperties());
+        factoryBean.setHibernateIntegrators(ReplicationEventListenerIntegrator.INSTANCE);
         factoryBean.afterPropertiesSet();
 
         return factoryBean.getObject();
@@ -44,6 +48,12 @@ public class TestHibernateConfig {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        //регистрация кастомного интерцептора аудита модификации данных
+        properties.put(
+                org.hibernate.cfg.AvailableSettings.SESSION_SCOPED_INTERCEPTOR,
+                AuditLogUserInterceptor.class.getName()
+        );
 
         return properties;
     }

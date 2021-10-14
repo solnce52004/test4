@@ -4,12 +4,16 @@ import dev.example.dao.interfaces.UserDao;
 import dev.example.dto.UserFullDTO;
 import dev.example.entities.Role;
 import dev.example.entities.User;
+import dev.example.entities.interceptors.AuditLogUserInterceptor;
+import dev.example.entities.interceptors.UsernameValidationInterceptor;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.FetchMode;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
@@ -17,6 +21,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.ClientInfoStatus;
 import java.util.List;
 
 @Repository
@@ -58,7 +63,10 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Long create(User user) {
-        final Session session = sessionFactory.getCurrentSession();
+        final Session session = sessionFactory
+                .withOptions()
+                .interceptor(new UsernameValidationInterceptor())
+                .openSession();
         final Transaction transaction = session.beginTransaction();
 
         session.save(user);
@@ -70,43 +78,65 @@ public class UserDaoImpl implements UserDao {
         return userId;
     }
 
+    public Long createWithAudit(User user) {
+//        final EntityManager em = sessionFactory.openSession();
+//        Session session = em.unwrap(Session.class);
+        final Session session = sessionFactory.openSession();
+        final AuditLogUserInterceptor interceptor = (AuditLogUserInterceptor) ((SessionImplementor) session).getInterceptor();
+        interceptor.setCurrentSession(session);
+        interceptor.setCurrentAuthorId(15L);
+
+        final Transaction transaction = session.beginTransaction();
+
+        session.save(user);
+        transaction.commit();
+
+        session.close();
+
+        final Long userId = user.getId();
+        log.info("user:{} created", userId);
+        return userId;
+    }
+
     @Override
     public void remove(User user) {
-        final Session session = sessionFactory.getCurrentSession();
+        final Session session = sessionFactory.openSession();
         final Transaction transaction = session.beginTransaction();
 
         session.remove(user);
         transaction.commit();
-
+        session.close();
         log.info("user removed");
     }
 
     @Override
     public User findById(Long id) {
-        final Session session = sessionFactory.getCurrentSession();
-        final Transaction transaction = session.beginTransaction();
+        final Session session = sessionFactory.openSession();
+        session.beginTransaction();
 
-        final User user = (User) session.createCriteria(User.class)
-                .add(Restrictions.eq("id", id))
-//                .setFetchMode("roles", FetchMode.JOIN)
-//                .setFetchMode("addresses", FetchMode.JOIN)
+        final List<User> list = session.createCriteria(User.class, "u")
+                .add(Restrictions.eq("u.id", id))
+                .setFetchMode("roles", FetchMode.JOIN)
+                .setFetchMode("addresses", FetchMode.JOIN)
                 .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY)
-                .list()
+                .list();
+
+        final Transaction transaction = session.getTransaction();
+        System.out.println(transaction);
+
+        session.getTransaction().commit();
+        session.close();
+
+
+        return list
                 .stream()
                 .findFirst()
                 .orElse(null);
-
-        transaction.commit();
-
-        //TODO
-//        final UserDTO userDTO = new GetterTransformerUserToDto(sessionFactory).findById(id);
-
-        return user;
     }
 
     @Override
     public List<User> findAll() {
-        final Session session = sessionFactory.getCurrentSession();
+        final Session session = sessionFactory.openSession();
         final Transaction transaction = session.beginTransaction();
 
         final Query<User> namedQuery = session.createNamedQuery("User_findUsersOrderByName");
@@ -114,6 +144,7 @@ public class UserDaoImpl implements UserDao {
                 .getResultList();
 
         transaction.commit();
+        session.close();
 
         return namedQueryResultList;
     }
@@ -121,7 +152,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     @SuppressWarnings("deprecated")
     public List<UserFullDTO> findAllByRole(Role role) {
-        final Session session = sessionFactory.getCurrentSession();
+        final Session session = sessionFactory.openSession();
         final Transaction transaction = session.beginTransaction();
 
         List<UserFullDTO> namedQueryResultList = session
@@ -137,7 +168,32 @@ public class UserDaoImpl implements UserDao {
                 .getResultList();
 
         transaction.commit();
+        session.close();
 
         return namedQueryResultList;
+    }
+
+    public void update(User user) {
+        Session session = sessionFactory
+                .withOptions()
+                .interceptor(new UsernameValidationInterceptor())
+                .openSession();
+        session.beginTransaction();
+
+        session.update(user);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void delete(User user) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        final User userExists = session.get(User.class, user.getId());
+        session.remove(userExists);
+
+        session.getTransaction().commit();
+        session.close();
     }
 }

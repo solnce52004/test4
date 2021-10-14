@@ -1,6 +1,6 @@
 package dev.example.entities.converters;
 
-import dev.example.entities.BaseEntity;
+import dev.conf.Constants;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -18,7 +18,7 @@ public class ZonedDateTimeAttributeConverter implements AttributeConverter<Zoned
                 ? null
                 : Timestamp.from(zoned
                         .toLocalDateTime()
-                        .atZone(ZoneId.of(BaseEntity.CURRENT_TIMEZONE))
+                        .atZone(ZoneId.of(Constants.CURRENT_TIMEZONE))
                         .toInstant()
         );
     }
@@ -30,6 +30,6 @@ public class ZonedDateTimeAttributeConverter implements AttributeConverter<Zoned
                 ? null
                 : timestamp
                 .toInstant()
-                .atZone(ZoneId.of(BaseEntity.CURRENT_TIMEZONE));
+                .atZone(ZoneId.of(Constants.CURRENT_TIMEZONE));
     }
 }

@@ -1,5 +1,6 @@
 package dev.conf;
 
+import dev.example.entities.event_listeners.ReplicationEventListenerIntegrator;
 import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ public class HibernateConfig {
         factoryBean.setPackagesToScan("dev.example.entities");
         factoryBean.setAnnotatedPackages("dev.example.dao");
         factoryBean.setHibernateProperties(hibernateProperties());
+        factoryBean.setHibernateIntegrators(ReplicationEventListenerIntegrator.INSTANCE);
         factoryBean.afterPropertiesSet();
 
         return factoryBean.getObject();

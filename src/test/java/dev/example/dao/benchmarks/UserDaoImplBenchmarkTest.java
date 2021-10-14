@@ -7,6 +7,7 @@ import dev.example.dao.UserDaoImpl;
 import dev.example.entities.Address;
 import dev.example.entities.Role;
 import dev.example.entities.User;
+import dev.example.entities.enams.EnumRole;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openjdk.jmh.annotations.*;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -46,7 +47,7 @@ public class UserDaoImplBenchmarkTest extends AbstractBenchmark {
         userDao = context.getBean(UserDaoImpl.class);
 
 
-        role.setTitle("quest");
+        role.setTitle(EnumRole.ADMIN);
         role.setLevel(2);
         roles.add(role);
 

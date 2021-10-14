@@ -16,9 +16,6 @@ import java.util.Date;
 @EqualsAndHashCode(of = {"createdAt", "updatedAt"})
 @ToString
 public class BaseEntity {
-    public static final String CURRENT_TIMEZONE = "Europe/Moscow";
-//    public static final String CURRENT_TIMEZONE = "Asia/Ho_Chi_Minh";//test
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 //    @GeneratedValue(generator = "GENERATOR_ENHANCED_SEQUENCE")
@@ -30,7 +27,8 @@ public class BaseEntity {
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Generated(GenerationTime.ALWAYS)
-    @Column(name="updated_at", updatable = false, insertable = false)
+//    @Generated(GenerationTime.ALWAYS)
+    @UpdateTimestamp
+    @Column(name="updated_at", insertable = false)
     private Date updatedAt;
 }
