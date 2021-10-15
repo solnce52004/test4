@@ -1,6 +1,7 @@
 package dev.conf;
 
 import dev.example.dao.AddressDaoImpl;
+import dev.example.dao.OrganizationDaoImpl;
 import dev.example.dao.RoleDaoImpl;
 import dev.example.dao.interfaces.UserDao;
 import dev.example.dao.UserDaoImpl;
@@ -12,6 +13,11 @@ import org.springframework.context.annotation.*;
 @PropertySource("classpath:application.properties")
 @Import(TestHibernateConfig.class)
 public class TestConfig {
+
+    @Bean
+    public OrganizationDaoImpl organizationDao(SessionFactory sessionFactory){
+        return new OrganizationDaoImpl(sessionFactory);
+    }
 
     @Bean
     public UserDaoImpl userDaoImpl(SessionFactory sessionFactory){

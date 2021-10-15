@@ -46,7 +46,7 @@ class UserDaoImplTest {
     private final List<Role> roles = new ArrayList<>();
     private final Address address = new Address();
 
-    @BeforeEach
+/*    @BeforeEach
     void before() {
         Status isActualUser = new Status(true);
         Status isActualRole = new Status(true);
@@ -72,7 +72,7 @@ class UserDaoImplTest {
         user.setRoles(roles);
         user.setAddresses(address);
         user.setIsActual(isActualUser);
-    }
+    }*/
 
 //    @AfterEach
 //    void after(){
@@ -103,6 +103,13 @@ class UserDaoImplTest {
     void findAll() {
         final List<User> users = userDao.findAll();
         System.out.println(users);
+        assertThat(users).isNotEmpty();
+    }
+    @Test
+    void findAllByIsActualByCreatedAt() {
+        final List<User> users = userDao.findAllByIsActualByCreatedAt();
+//        System.out.println(users);
+        System.out.println(users.size());
         assertThat(users).isNotEmpty();
     }
 

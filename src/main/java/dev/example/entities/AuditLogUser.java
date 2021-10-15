@@ -5,11 +5,10 @@ import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "audit_log_users", schema = "test4")
+@Table(name = "audit_log_users")
 @Getter
 @Setter
 @NoArgsConstructor

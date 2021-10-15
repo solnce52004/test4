@@ -3,6 +3,7 @@ package dev.example.entities;
 import dev.example.entities.converters.StatusAttrConverter;
 import dev.example.entities.embeddable.Status;
 import dev.example.entities.event_listeners.PersistEntityListener;
+import dev.example.entities.filters.DynamicUserFilter;
 import dev.example.entities.interfaces.Auditable;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,6 +29,7 @@ import java.util.List;
 //@Subselect("select *, count(u.id) as COUNTUSER5000 from users as u where id=5000")
 //@Synchronize({"User"})
 @EntityListeners(PersistEntityListener.class)
+@Filter(name = DynamicUserFilter.LIMIT_BY_IS_ACTUAL)
 
 public class User extends BaseEntity implements Auditable {
     @Column(name = "username")

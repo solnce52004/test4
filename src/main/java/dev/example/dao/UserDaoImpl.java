@@ -4,13 +4,12 @@ import dev.example.dao.interfaces.UserDao;
 import dev.example.dto.UserFullDTO;
 import dev.example.entities.Role;
 import dev.example.entities.User;
+import dev.example.entities.filters.DynamicUserFilter;
 import dev.example.entities.interceptors.AuditLogUserInterceptor;
 import dev.example.entities.interceptors.UsernameValidationInterceptor;
+import dev.example.entities.named_queries.UserNamedQueries;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.FetchMode;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionImplementor;
@@ -21,7 +20,8 @@ import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ClientInfoStatus;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
 @Repository
@@ -139,7 +139,7 @@ public class UserDaoImpl implements UserDao {
         final Session session = sessionFactory.openSession();
         final Transaction transaction = session.beginTransaction();
 
-        final Query<User> namedQuery = session.createNamedQuery("User_findUsersOrderByName");
+        final Query<User> namedQuery = session.createNamedQuery(UserNamedQueries.FIND_USERS_ORDER_BY_NAME);
         final List<User> namedQueryResultList = namedQuery
                 .getResultList();
 
@@ -149,6 +149,30 @@ public class UserDaoImpl implements UserDao {
         return namedQueryResultList;
     }
 
+    public List<User> findAllByIsActualByCreatedAt() {
+
+        final Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        final Filter filter = session.enableFilter(DynamicUserFilter.LIMIT_BY_IS_ACTUAL);
+
+        filter.setParameter(DynamicUserFilter.LIMIT_BY_IS_ACTUAL_PARAM_CREATED_AT, "2021-10-14");
+        filter.setParameter(DynamicUserFilter.LIMIT_BY_IS_ACTUAL_PARAM_IS_ACTUAL, 4);
+
+        final CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+        final CriteriaQuery<User> query = criteriaBuilder.createQuery(User.class);
+        query.select(query.from(User.class));
+        final List<User> list = session.createQuery(query).getResultList();
+
+//        final List<User> list = session
+//                .createQuery("select u from User u", User.class)
+//                .getResultList();
+
+        session.getTransaction().commit();
+        session.close();
+
+        return list;
+    }
+
     @Override
     @SuppressWarnings("deprecated")
     public List<UserFullDTO> findAllByRole(Role role) {
@@ -156,7 +180,7 @@ public class UserDaoImpl implements UserDao {
         final Transaction transaction = session.beginTransaction();
 
         List<UserFullDTO> namedQueryResultList = session
-                .createNamedQuery("User_findUsersByRole_Native")
+                .createNamedQuery(UserNamedQueries.FIND_USERS_BY_ROLE_NATIVE)
                 .setParameter("role_title", role.getTitle())
                 .unwrap(NativeQuery.class)
                 .addScalar("id", StandardBasicTypes.LONG)
