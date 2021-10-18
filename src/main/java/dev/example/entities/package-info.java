@@ -41,7 +41,7 @@
         parameters = {
                 @Parameter(
                         name = "sequence_name",
-                        value = "TEST4_SEQUENCE"
+                        value = "hibernate_sequence"
                 ),
                 @Parameter(
                         name = "initial_value",

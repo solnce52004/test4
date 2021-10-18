@@ -7,9 +7,11 @@ import dev.example.entities.Role;
 import dev.example.entities.User;
 import dev.example.entities.embeddable.Status;
 import dev.example.entities.enams.EnumRole;
+import dev.example.entities.envers.CurrentUser;
 import io.sniffy.sql.SqlExpectation;
 import io.sniffy.test.Count;
 import io.sniffy.test.spring.SniffySpringTestListener;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,10 +34,11 @@ import static org.springframework.test.context.TestExecutionListeners.MergeMode.
         classes = {TestConfig.class},
         loader = AnnotationConfigContextLoader.class
 )
-@TestExecutionListeners(
-        value = SniffySpringTestListener.class,
-        mergeMode = MERGE_WITH_DEFAULTS
-)
+@Log4j2
+//@TestExecutionListeners(
+//        value = SniffySpringTestListener.class,
+//        mergeMode = MERGE_WITH_DEFAULTS
+//)
 class UserDaoImplTest {
 
     @Autowired
@@ -46,7 +49,7 @@ class UserDaoImplTest {
     private final List<Role> roles = new ArrayList<>();
     private final Address address = new Address();
 
-/*    @BeforeEach
+  /*  @BeforeEach
     void before() {
         Status isActualUser = new Status(true);
         Status isActualRole = new Status(true);
@@ -81,13 +84,14 @@ class UserDaoImplTest {
 
     @Test
     void create() {
+        CurrentUser.INSTANCE.logIn("Bob");
         final Long actual = userDao.create(user);
         System.out.println(userDao.findById(actual));
         assertThat(actual).isNotNull();
     }
 
     @Test
-    void createWithAudit() {
+    void createWithAuditInterceptor() {
         final Long id = userDao.createWithAudit(user);
         final User NewUserById = userDao.findById(id);
 
@@ -106,7 +110,7 @@ class UserDaoImplTest {
         assertThat(users).isNotEmpty();
     }
     @Test
-    void findAllByIsActualByCreatedAt() {
+    void findAllFilteredByIsActualByCreatedAt() {
         final List<User> users = userDao.findAllByIsActualByCreatedAt();
 //        System.out.println(users);
         System.out.println(users.size());
@@ -148,10 +152,11 @@ class UserDaoImplTest {
 
     @Test
     void updateById(){
-        final User userById = userDao.findById(5065L);
+        CurrentUser.INSTANCE.logIn("Маша");
+        final User userById = userDao.findById(5147L);
         System.out.println(userById);
 
-        final String username = "123456789";
+        final String username = "lkjhkjhkhk";
         userById.setUsername(username);
 
         userDao.update(userById);
@@ -162,4 +167,24 @@ class UserDaoImplTest {
 
         assertThat(userUpdated.getUsername()).isEqualTo(username);
     }
+
+    @Test
+    void delete() {
+        CurrentUser.INSTANCE.logIn("Ann");
+        log.info("User: {}", user);
+        final Long id = userDao.create(user);
+        log.info("id: {}", id);
+
+        userDao.remove(user);
+
+        final User userDeleted = userDao.findById(id);
+        log.info(userDeleted);
+        assertThat(userDeleted).isNull();
+    }
+
+//    @Test
+//    void findByIdWithGraph() {
+//        final User userGraph = userDao.findByIdWithGraph(5149L);
+//        log.info("***** {}", userGraph);
+//    }
 }

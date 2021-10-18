@@ -13,6 +13,7 @@ import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.graph.RootGraph;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.hibernate.transform.Transformers;
@@ -20,9 +21,12 @@ import org.hibernate.type.StandardBasicTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Log4j2
@@ -69,7 +73,7 @@ public class UserDaoImpl implements UserDao {
                 .openSession();
         final Transaction transaction = session.beginTransaction();
 
-        session.save(user);
+        session.persist(user);
         transaction.commit();
         session.close();
 
@@ -98,16 +102,6 @@ public class UserDaoImpl implements UserDao {
         return userId;
     }
 
-    @Override
-    public void remove(User user) {
-        final Session session = sessionFactory.openSession();
-        final Transaction transaction = session.beginTransaction();
-
-        session.remove(user);
-        transaction.commit();
-        session.close();
-        log.info("user removed");
-    }
 
     @Override
     public User findById(Long id) {
@@ -210,7 +204,8 @@ public class UserDaoImpl implements UserDao {
         session.close();
     }
 
-    public void delete(User user) {
+    @Override
+    public void remove(User user) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
@@ -219,5 +214,6 @@ public class UserDaoImpl implements UserDao {
 
         session.getTransaction().commit();
         session.close();
+        log.info("user removed");
     }
 }

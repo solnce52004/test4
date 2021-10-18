@@ -27,7 +27,7 @@ public class TestHibernateConfig {
         factoryBean.setPackagesToScan("dev.example.entities");
         factoryBean.setAnnotatedPackages("dev.example.dao");
         factoryBean.setHibernateProperties(hibernateProperties());
-        factoryBean.setHibernateIntegrators(ReplicationEventListenerIntegrator.INSTANCE);
+//        factoryBean.setHibernateIntegrators(ReplicationEventListenerIntegrator.INSTANCE);
         factoryBean.afterPropertiesSet();
 
         return factoryBean.getObject();
@@ -50,10 +50,10 @@ public class TestHibernateConfig {
         }
 
         //регистрация кастомного интерцептора аудита модификации данных
-        properties.put(
-                org.hibernate.cfg.AvailableSettings.SESSION_SCOPED_INTERCEPTOR,
-                AuditLogUserInterceptor.class.getName()
-        );
+//        properties.put(
+//                org.hibernate.cfg.AvailableSettings.SESSION_SCOPED_INTERCEPTOR,
+//                AuditLogUserInterceptor.class.getName()
+//        );
 
         return properties;
     }

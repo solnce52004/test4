@@ -1,15 +1,11 @@
 package dev.example.dao;
 
-import dev.example.entities.Department;
 import dev.example.entities.Organization;
-import dev.example.entities.OrganizationPK;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import java.util.UUID;
 
 @Repository
 @Log4j2

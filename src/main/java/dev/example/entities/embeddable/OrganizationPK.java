@@ -1,4 +1,4 @@
-package dev.example.entities;
+package dev.example.entities.embeddable;
 
 import lombok.*;
 

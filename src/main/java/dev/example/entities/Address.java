@@ -2,14 +2,14 @@ package dev.example.entities;
 
 import dev.example.entities.converters.ZonedDateTimeAttributeConverter;
 import lombok.*;
-import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Table(name = "addresses")
@@ -18,6 +18,9 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(exclude = "users", callSuper = true)
 @ToString(exclude = "users", callSuper = true)
+@DynamicUpdate
+@DynamicInsert
+@Audited
 
 public class Address extends BaseEntity {
 
@@ -33,7 +36,7 @@ public class Address extends BaseEntity {
             converter = ZonedDateTimeAttributeConverter.class,
             attributeName = "verified_at"
     )
-    @Column(name = "verified_at")
+    @Column(name = "verified_at", columnDefinition = "TIMESTAMP")
     private ZonedDateTime verifiedAt;
 
 
@@ -57,6 +60,6 @@ public class Address extends BaseEntity {
 //            cascade = CascadeType.ALL
     )
     @Fetch(value = FetchMode.JOIN)
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new HashSet<>();
     //В случае, когда вы хотите добавить к связи @OneToMany еще одну сущность, выгоднее использовать Bag, т.к. он для этой операции не требует загрузки всех связанных сущностей.
 }

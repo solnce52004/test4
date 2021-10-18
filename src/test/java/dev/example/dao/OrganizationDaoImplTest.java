@@ -1,9 +1,7 @@
 package dev.example.dao;
 
 import dev.conf.TestConfig;
-import dev.example.entities.Department;
 import dev.example.entities.Organization;
-import dev.example.entities.OrganizationPK;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-
-import java.util.UUID;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(

@@ -6,11 +6,15 @@ import dev.example.entities.embeddable.Status;
 import dev.example.entities.enams.EnumRole;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
+import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,7 +24,10 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(exclude = {"users"}, callSuper = true)
 @ToString(exclude = {"users"}, callSuper = true)
+@DynamicUpdate
+@DynamicInsert
 @Log4j2
+@Audited
 
 public class Role extends BaseEntity {
 
@@ -40,8 +47,9 @@ public class Role extends BaseEntity {
     // либо mappedBy, либо @JoinTable
     @ManyToMany(
             fetch = FetchType.LAZY,
-            mappedBy = "roles",
-            cascade = CascadeType.ALL
+            mappedBy = "roles"
+//            ,
+//            cascade = CascadeType.ALL
     )
     @Fetch(value = FetchMode.JOIN)
     private List<User> users = new ArrayList<>();

@@ -1,23 +1,29 @@
 package dev.example.entities;
 
+import dev.example.entities.embeddable.OrganizationPK;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "organizations")
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(exclude = {"users", "department"})
+@ToString(exclude = {"users", "department"})
 @IdClass(OrganizationPK.class)
-public class Organization {
+@Audited
 
+public class Organization {
     ////////////////////
 //    @EmbeddedId
 //    private OrganizationPK embeddedId;
@@ -68,12 +74,11 @@ public class Organization {
     @Column(name = "address_id", nullable = true)
     private Long addressId;
 
-    @ManyToOne
-//            (
-//            optional = false,
+    @ManyToOne(
+            optional = false,
 //            cascade = CascadeType.ALL,
-//            fetch = FetchType.EAGER
-//    )
+            fetch = FetchType.LAZY
+    )
     @Fetch(value = FetchMode.JOIN)
     @JoinColumn( //@MapsId не надо указывть
             name = "department_id",
@@ -85,4 +90,17 @@ public class Organization {
 //    @MapsId("departmentId") //если часть составного ключа - внешний (@JoinColumn не надо указывть)
     // позволяет каскадное сохранение
     private Department department;
+
+    @NotAudited
+    @OneToMany(
+            mappedBy = "organization",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
+    )
+//    @JoinTable(name = "users")
+//    @JoinColumns({
+//            @JoinColumn(name = "department_id", referencedColumnName = "department_id"),
+//            @JoinColumn(name = "department_num", referencedColumnName = "num")
+//    })
+    private Set<User> users = new HashSet<>();
 }

@@ -24,7 +24,7 @@ public class HibernateConfig {
         factoryBean.setPackagesToScan("dev.example.entities");
         factoryBean.setAnnotatedPackages("dev.example.dao");
         factoryBean.setHibernateProperties(hibernateProperties());
-        factoryBean.setHibernateIntegrators(ReplicationEventListenerIntegrator.INSTANCE);
+//        factoryBean.setHibernateIntegrators(ReplicationEventListenerIntegrator.INSTANCE);
         factoryBean.afterPropertiesSet();
 
         return factoryBean.getObject();
