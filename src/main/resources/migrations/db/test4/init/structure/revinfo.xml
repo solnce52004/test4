@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+
+    <changeSet author="masha (generated)" id="1634664254521-1">
+        <createTable tableName="REVINFO">
+            <column autoIncrement="true" name="REV" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="REVTSTMP" type="BIGINT"/>
+            <column name="username" type="VARCHAR(225)"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -27,7 +27,7 @@ import java.util.UUID;
 //@EqualsAndHashCode(exclude = {"roles", "addresses"}, callSuper = true)
 //@ToString(exclude = {"roles", "addresses"},callSuper = true)
 @EqualsAndHashCode(exclude = {"roles", "addresses", "organization"}, callSuper = true)
-@ToString(exclude = {"roles", "addresses", "organization"},callSuper = true)
+@ToString(callSuper = true)
 @DynamicUpdate
 @DynamicInsert
 //@Where(clause = "id=5000")
@@ -52,6 +52,7 @@ public class User extends BaseEntity implements Auditable {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     @Fetch(value = FetchMode.JOIN)
+    @ToString.Exclude
 //    @BatchSize(size = 10)
     private List<Role> roles = new ArrayList<>();
 
@@ -63,7 +64,8 @@ public class User extends BaseEntity implements Auditable {
     )
     @JoinColumn(name = "address_id")
     @Fetch(value = FetchMode.JOIN)
-    @Type(type = "dev.example.entities.Address") //так можно задавть кастоные типы для поля
+    @Type(type = "dev.example.entities.Address")//так можно задавть кастомные типы для поля
+    @ToString.Exclude
     private Address addresses = null;
     //Поведение HQL запросов при режиме загрузке FetchMode.JOIN, на первый взгляд, немного неожиданное. Вместо того, чтобы загрузить связанные коллекции, помеченные аннотацией @Fetch(FetchMode.JOIN), в одном запросе с корневыми сущностями, используя SQL оператор JOIN, HQL запрос транслируется в несколько SQL запросов по типа FetchMode.SELECT. Но в отличии от FetchMode.SELECT, при FetchMode.JOIN будет игнорироваться указанный тип загрузки (LAZY и EAGER) и все коллекции будут загружены сразу, а не при первом обращении в коде (поведение соответствующее типу EAGER).
 
@@ -92,5 +94,6 @@ public class User extends BaseEntity implements Auditable {
             @JoinColumn(name = "department_id", referencedColumnName = "department_id"),
             @JoinColumn(name = "department_num", referencedColumnName = "num")
     })
+    @ToString.Exclude
     private Organization organization;
 }

@@ -23,13 +23,14 @@ import java.util.List;
 @Getter
 @Setter
 @EqualsAndHashCode(exclude = {"users"}, callSuper = true)
-@ToString(exclude = {"users"}, callSuper = true)
+@ToString(callSuper = true)
 @DynamicUpdate
 @DynamicInsert
 @Log4j2
 @Audited
 
 public class Role extends BaseEntity {
+    public static final String COLUMN_TITLE_NAME = "title";
 
     //    private String title = UserRole.QUEST.getRole(); //если решим работать как со строкой
 //    @Enumerated(value = EnumType.STRING) // если используем конвертер - не указваем аннотацию!
@@ -37,8 +38,9 @@ public class Role extends BaseEntity {
     // можно не указывать конвертер, у которого autoApply = true и в параметрах класс аттрибута
     // такой конвертер будет действать для всех атрибутов такого типа (EnumRole) для всех моделей!!!
     // везде в коде - upper, в базу упадет - lower
-//    @Convert(converter = EnumRoleConverter.class)
-    @Column(name = "title")
+//    @Enumerated
+    @Convert(converter = EnumRoleConverter.class)
+    @Column(name = COLUMN_TITLE_NAME, nullable = false, columnDefinition = "VARCHAR(255)")
     private EnumRole title = EnumRole.QUEST;
 
     @Column(name = "level")
@@ -51,6 +53,7 @@ public class Role extends BaseEntity {
             ,cascade = CascadeType.ALL
     )
     @Fetch(value = FetchMode.JOIN)
+    @ToString.Exclude
     private List<User> users = new ArrayList<>();
 
     @Embedded

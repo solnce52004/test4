@@ -1,5 +1,6 @@
 package dev.conf;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import java.util.Properties;
 @PropertySources( value = {
         @PropertySource("classpath:persistence.properties"),
         @PropertySource("classpath:spy.properties"),
+        @PropertySource("classpath:liquibase.properties")
 })
 @EnableTransactionManagement
 public class TestPersistenceConfig {
@@ -35,5 +37,13 @@ public class TestPersistenceConfig {
         driverManager.setPassword(env.getProperty("db.password"));
 
         return driverManager;
+    }
+
+    @Bean
+    public SpringLiquibase liquibase() {
+        SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setChangeLog("classpath:" + env.getProperty("output_classpath"));
+        liquibase.setDataSource(dataSource());
+        return liquibase;
     }
 }

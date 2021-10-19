@@ -1,5 +1,6 @@
 package dev.example.dao;
 
+import dev.conf.Constants;
 import dev.conf.TestConfig;
 import dev.example.dto.UserFullDTO;
 import dev.example.entities.Address;
@@ -50,7 +51,7 @@ class UserDaoImplTest {
     private final List<Role> roles = new ArrayList<>();
     private final Address address = new Address();
 
-  /*  @BeforeEach
+    @BeforeEach
     void before() {
         Status isActualUser = new Status(true);
         Status isActualRole = new Status(true);
@@ -66,8 +67,8 @@ class UserDaoImplTest {
         address.setVerifiedAt(
 //                Timestamp.from(
                 LocalDateTime.now()
-                        .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
-//                        .atZone(ZoneId.of(Constants.CURRENT_TIMEZONE))
+//                        .atZone(ZoneId.of("Asia/Ho_Chi_Minh"))
+                        .atZone(ZoneId.of(Constants.CURRENT_TIMEZONE))
 //                        .toInstant()
 //                )
         );
@@ -76,7 +77,7 @@ class UserDaoImplTest {
         user.setRoles(roles);
         user.setAddresses(address);
         user.setIsActual(isActualUser);
-    }*/
+    }
 
 //    @AfterEach
 //    void after(){
@@ -188,4 +189,9 @@ class UserDaoImplTest {
 //        final User userGraph = userDao.findByIdWithGraph(5149L);
 //        log.info("***** {}", userGraph);
 //    }
+
+    @Test
+    void initDB() {
+        log.info("ok");
+    }
 }

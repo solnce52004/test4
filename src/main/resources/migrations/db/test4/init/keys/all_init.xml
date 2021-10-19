@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet author="masha (generated)" id="1634664254521-27">
+        <addForeignKeyConstraint
+                baseColumnNames="REV"
+                baseTableName="roles_AUD"
+                constraintName="FK3udarg0q4wa62rnnfcf6b46a2"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"
+                referencedColumnNames="REV"
+                referencedTableName="REVINFO"
+                validate="true"
+        />
+    </changeSet>
+
+    <changeSet author="masha (generated)" id="1634664254521-28">
+        <addForeignKeyConstraint
+                baseColumnNames="REV"
+                baseTableName="addresses_AUD"
+                constraintName="FK50mnuowbhm0kdar74cu56p098"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"
+                referencedColumnNames="REV"
+                referencedTableName="REVINFO"
+                validate="true"
+        />
+    </changeSet>
+
+    <changeSet author="masha (generated)" id="1634664254521-29">
+        <addForeignKeyConstraint
+                baseColumnNames="address_id"
+                baseTableName="users"
+                constraintName="FKe8vydtk7hf0y16bfm558sywbb"
+                deferrable="false"
+                initiallyDeferred="false"
+                onDelete="RESTRICT"
+                onUpdate="RESTRICT"
+                referencedColumnNames="id"
+                referencedTableName="addresses"
+                validate="true"
+        />
+    </changeSet>
+
+    <changeSet author="masha (generated)" id="1634664254521-30">
+        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="departments_AUD" constraintName="FKgo787v89whttqi569t1nnr2i0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-31">
+        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="users_AUD" constraintName="FKinrdywgyurfk2ojrfkard4ejn" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-32">
+        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="user_role_AUD" constraintName="FKp5t052uaqjo7c5lbxqguiuwyo" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-33">
+        <addForeignKeyConstraint baseColumnNames="REV" baseTableName="organizations_AUD" constraintName="FKpv58yywtiu5lo8lj0bjnhem4c" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="REV" referencedTableName="REVINFO" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-34">
+        <addForeignKeyConstraint baseColumnNames="role_id" baseTableName="user_role" constraintName="FKt7e7djp752sqn6w22i6ocqy6q" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="roles" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-35">
+        <addForeignKeyConstraint baseColumnNames="department_id" baseTableName="organizations" constraintName="organizations_department_id_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="departments" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-36">
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_role" constraintName="user_role_users_id_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-37">
+        <addForeignKeyConstraint baseColumnNames="department_num,department_id" baseTableName="users" constraintName="users_organizations_num_department_id_fk" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="num,department_id" referencedTableName="organizations" validate="true"/>
+    </changeSet>
+</databaseChangeLog>

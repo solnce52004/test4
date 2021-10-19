@@ -16,8 +16,8 @@ import java.util.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = "users", callSuper = true)
-@ToString(exclude = "users", callSuper = true)
+@EqualsAndHashCode(exclude = {"users"}, callSuper = true)
+@ToString(exclude = {"users"}, callSuper = true)
 @DynamicUpdate
 @DynamicInsert
 @Audited

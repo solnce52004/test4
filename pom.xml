@@ -136,7 +136,6 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
             <version>${hibernate.version}</version>
-<!--            <version>5.6.0.Final</version>-->
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -265,6 +264,15 @@
 <!--                        </execution>-->
 <!--                    </executions>-->
 <!--                </plugin>-->
+
+                    <plugin>
+                        <groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                        <version>4.5.0</version>
+                        <configuration>
+                            <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                        </configuration>
+                    </plugin>
 
 
                 <plugin>

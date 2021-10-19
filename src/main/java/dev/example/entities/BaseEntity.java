@@ -4,6 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Generated;
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -29,6 +30,7 @@ public class BaseEntity {
     @Column(name="created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP")
     private Date createdAt;
 
+    @NotAudited
     @Temporal(TemporalType.TIMESTAMP)
 //    @Generated(GenerationTime.ALWAYS)
     @UpdateTimestamp

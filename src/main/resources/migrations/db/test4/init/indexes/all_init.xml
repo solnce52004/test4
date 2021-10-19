@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
+
+    <changeSet author="masha (generated)" id="1634664254521-17">
+        <createIndex indexName="FK3udarg0q4wa62rnnfcf6b46a2" tableName="roles_AUD">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-18">
+        <createIndex indexName="FK50mnuowbhm0kdar74cu56p098" tableName="addresses_AUD">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-19">
+        <createIndex indexName="FKe8vydtk7hf0y16bfm558sywbb" tableName="users">
+            <column name="address_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-20">
+        <createIndex indexName="FKgo787v89whttqi569t1nnr2i0" tableName="departments_AUD">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-21">
+        <createIndex indexName="FKinrdywgyurfk2ojrfkard4ejn" tableName="users_AUD">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-22">
+        <createIndex indexName="FKpv58yywtiu5lo8lj0bjnhem4c" tableName="organizations_AUD">
+            <column name="REV"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-23">
+        <createIndex indexName="FKt7e7djp752sqn6w22i6ocqy6q" tableName="user_role">
+            <column name="role_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-24">
+        <createIndex indexName="organizations_department_id_fk" tableName="organizations">
+            <column name="department_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-25">
+        <createIndex indexName="user_role_user_id_index" tableName="user_role">
+            <column name="user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="masha (generated)" id="1634664254521-26">
+        <createIndex indexName="users_organizations_num_department_id_fk" tableName="users">
+            <column name="department_num"/>
+            <column name="department_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>
