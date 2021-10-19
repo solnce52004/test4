@@ -62,13 +62,13 @@ public class UserDaoImplBenchmarkTest extends AbstractBenchmark {
     }
 
 
-    @Benchmark
-    public void createUser(UserNameState state) {
-
-        user.setUsername(state.userName);
-        user.setRoles(roles);
-        user.setAddresses(address);
-
-        userDao.create(user);
-    }
+//    @Benchmark
+//    public void createUser(UserNameState state) {
+//
+//        user.setUsername(state.userName);
+//        user.setRoles(roles);
+//        user.setAddresses(address);
+//
+//        userDao.create(user);
+//    }
 }

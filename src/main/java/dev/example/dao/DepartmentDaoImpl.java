@@ -42,20 +42,17 @@ public class DepartmentDaoImpl {
 //        final User user = session.find(User.class, id, properties);
 
         //указание в query
-        final EntityGraph<Department> entityGraph = (EntityGraph<Department>)session.getEntityGraph(
-                "department.organizations.users"
-        );
-        final List<Department> list = session.createQuery(
-                "select d from departments d where d.id=:id",
+           final List<Department> list = session.createQuery(
+                "select distinct d from departments d where d.id=:id",
                 Department.class)
                 .setParameter("id", id)
                 .setHint(
-                        "javax.persistence.fetchgraph",
-//                        "javax.persistence.loadgraph",
-                        entityGraph
+                        "javax.persistence.fetchgraph",//1 JDBC statements
+//                        "javax.persistence.loadgraph",//15 JDBC statements
+                        session.getEntityGraph("department.organizations.users")
+//                        session.getEntityGraph("department.organizations")
                 )
                 .getResultList();
-
 
         session.getTransaction().commit();
         session.close();

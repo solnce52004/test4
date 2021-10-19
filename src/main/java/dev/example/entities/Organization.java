@@ -97,10 +97,6 @@ public class Organization {
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
     )
-//    @JoinTable(name = "users")
-//    @JoinColumns({
-//            @JoinColumn(name = "department_id", referencedColumnName = "department_id"),
-//            @JoinColumn(name = "department_num", referencedColumnName = "num")
-//    })
+    @Fetch(FetchMode.SUBSELECT)
     private Set<User> users = new HashSet<>();
 }

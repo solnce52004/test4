@@ -48,8 +48,7 @@ public class Role extends BaseEntity {
     @ManyToMany(
             fetch = FetchType.LAZY,
             mappedBy = "roles"
-//            ,
-//            cascade = CascadeType.ALL
+            ,cascade = CascadeType.ALL
     )
     @Fetch(value = FetchMode.JOIN)
     private List<User> users = new ArrayList<>();

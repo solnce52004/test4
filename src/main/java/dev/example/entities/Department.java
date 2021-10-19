@@ -53,4 +53,9 @@ public class Department {
             fetch = FetchType.EAGER
     )
     private Set<Organization> organization = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "organizations", joinColumns=@JoinColumn(name="department_id"))
+    @Column(name = "title")
+    private Set<String> orgTitles = new HashSet<>();
 }

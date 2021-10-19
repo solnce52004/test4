@@ -87,17 +87,10 @@ public class User extends BaseEntity implements Auditable {
 
     @NotAudited
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "department_id", referencedColumnName = "department_id")
-    @JoinColumn(name = "department_num", referencedColumnName = "num")
     @Fetch(value = FetchMode.JOIN)
+        @JoinColumns({
+            @JoinColumn(name = "department_id", referencedColumnName = "department_id"),
+            @JoinColumn(name = "department_num", referencedColumnName = "num")
+    })
     private Organization organization;
-
-
-//    @NotAudited
-//    @Column(name = "department_num")
-//    private UUID departmentNum;
-//    @NotAudited
-//    @Column(name = "department_id")
-//    private Long departmentId;
-
 }

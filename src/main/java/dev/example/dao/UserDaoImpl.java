@@ -4,6 +4,7 @@ import dev.example.dao.interfaces.UserDao;
 import dev.example.dto.UserFullDTO;
 import dev.example.entities.Role;
 import dev.example.entities.User;
+import dev.example.entities.User_;
 import dev.example.entities.filters.DynamicUserFilter;
 import dev.example.entities.interceptors.AuditLogUserInterceptor;
 import dev.example.entities.interceptors.UsernameValidationInterceptor;
@@ -175,9 +176,9 @@ public class UserDaoImpl implements UserDao {
 
         List<UserFullDTO> namedQueryResultList = session
                 .createNamedQuery(UserNamedQueries.FIND_USERS_BY_ROLE_NATIVE)
-                .setParameter("role_title", role.getTitle())
+                .setParameter("role_title", role.getTitle().name().toLowerCase())
                 .unwrap(NativeQuery.class)
-                .addScalar("id", StandardBasicTypes.LONG)
+                .addScalar(User_.ID, StandardBasicTypes.LONG)
                 .addScalar("username", StandardBasicTypes.STRING)
                 .addScalar("addressId", StandardBasicTypes.LONG)
                 .addScalar("roleTitle", StandardBasicTypes.STRING)
