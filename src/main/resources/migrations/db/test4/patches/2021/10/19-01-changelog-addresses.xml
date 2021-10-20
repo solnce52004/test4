@@ -6,6 +6,9 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd">
 
     <changeSet id="1634646176154-1" author="masha">
+        <tagDatabase tag="tag_1634646176154-1"/>
+    </changeSet>
+    <changeSet id="1634646176154-1.1" author="masha">
         <addColumn tableName="addresses">
             <column name="flat" type="int" afterColumn="num_building"/>
         </addColumn>

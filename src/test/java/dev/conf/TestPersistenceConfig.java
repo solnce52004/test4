@@ -42,7 +42,7 @@ public class TestPersistenceConfig {
     @Bean
     public SpringLiquibase liquibase() {
         SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setChangeLog("classpath:" + env.getProperty("output_classpath"));
+        liquibase.setChangeLog(env.getProperty("output_classpath"));
         liquibase.setDataSource(dataSource());
         return liquibase;
     }
